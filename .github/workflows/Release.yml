@@ -15,6 +15,13 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-android: "true"
+          remove-dotnet: "true"
+          remove-haskell: "true"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -43,7 +50,6 @@ jobs:
             lychee0/finalrip:${{ matrix.dockerfile }}-cuda-${{ github.ref_name }}
           build-args: |
             BASE_CONTAINER_TAG=cuda-v0.4.0
-          no-cache: true
 
       - name: Build and push for other services
         if: matrix.dockerfile != 'worker-encode'
@@ -56,7 +62,6 @@ jobs:
           tags: |
             lychee0/finalrip:${{ matrix.dockerfile }}
             lychee0/finalrip:${{ matrix.dockerfile }}-${{ github.ref_name }}
-          no-cache: true
 
   github:
     needs: [docker]
